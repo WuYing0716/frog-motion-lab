@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>人体的运动 · 知识大擂台</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #142e25;
+      --soft: #4c6258;
+      --accent: #205743;
+      --select: #e6f0e7;
+      --line: #d6dfd6;
+      --paper: #fffefa;
+      font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #edf2eb;
+      color: var(--ink);
+    }
+    h1, p { margin: 0; }
+    .shell {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: clamp(16px, 4vw, 48px);
+    }
+    .course {
+      margin-bottom: 16px;
+      color: var(--accent);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: .07em;
+    }
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: clamp(20px, 5vw, 48px);
+      box-shadow: 0 14px 38px #2543310d;
+    }
+    .welcome h1, .result h1 {
+      margin-bottom: 12px;
+      font-size: clamp(2rem, 6vw, 3.25rem);
+      line-height: 1.17;
+    }
+    .instructions { max-width: 32em; line-height: 1.7; color: var(--soft); }
+    .facts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 30px;
+      margin: 24px 0;
+      padding: 16px 0;
+      border-block: 1px solid var(--line);
+    }
+    .facts div { min-width: 70px; }
+    .facts dt { color: var(--soft); font-size: .9rem; }
+    .facts dd { margin: 3px 0 0; font-size: 1.35rem; font-weight: 700; }
+    button {
+      min-height: 48px;
+      padding: 11px 18px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--paper);
+      color: var(--ink);
+      font: inherit;
+      font-weight: 650;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    button:focus-visible { outline: 3px solid #a94e25; outline-offset: 3px; }
+    button:disabled { cursor: default; opacity: .46; }
+    .primary {
+      min-width: 7rem;
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 14px 24px;
+      margin-bottom: 18px;
+    }
+    .progress-block { flex: 1; min-width: 0; }
+    .progress-block label { display: block; color: var(--soft); font-size: .9rem; }
+    progress {
+      display: block;
+      overflow: hidden;
+      width: 100%;
+      height: 7px;
+      margin-top: 7px;
+      appearance: none;
+      border: 0;
+      border-radius: 8px;
+      accent-color: var(--accent);
+      background: #dce6db;
+    }
+    progress::-webkit-progress-bar { background: #dce6db; }
+    progress::-webkit-progress-value { background: var(--accent); border-radius: 8px; }
+    progress::-moz-progress-bar { background: var(--accent); border-radius: 8px; }
+    .timer {
+      min-width: 90px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      background: #dfeadf;
+      color: var(--accent);
+      text-align: center;
+    }
+    .timer span { display: block; font-size: .8rem; }
+    .timer strong { font-size: 1.3rem; font-variant-numeric: tabular-nums; }
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 12px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .question h1 {
+      font-size: clamp(1.3rem, 3.7vw, 2rem);
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+    .options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 11px;
+      margin: 22px 0;
+    }
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 64px;
+      padding: 12px;
+      text-align: left;
+      overflow-wrap: anywhere;
+    }
+    .option[aria-pressed="true"] {
+      background: var(--select);
+      border-color: var(--accent);
+      box-shadow: inset 0 0 0 1px var(--accent);
+    }
+    .letter {
+      flex: 0 0 27px;
+      padding: 3px 0;
+      border-radius: 6px;
+      background: #e9efe6;
+      color: var(--accent);
+      font-size: .85rem;
+      font-weight: 800;
+      text-align: center;
+    }
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+    .navigation p { color: var(--soft); font-size: .88rem; text-align: right; }
+    .score-line { color: var(--soft); font-weight: 650; }
+    #score {
+      color: var(--accent);
+      font-size: clamp(3.4rem, 10vw, 5.7rem);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.15;
+    }
+    @media (max-width: 520px) {
+      .options.choice { grid-template-columns: 1fr; }
+      .navigation button { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <p class="course">人体的运动 · 苏中附校 吴颖</p>
+
+    <section class="card welcome" id="welcome">
+      <h1 id="welcome-title" tabindex="-1">知识大擂台</h1>
+      <p class="instructions">点击开始后计时。交卷前可以返回修改答案，12 道题全部选完即自动交卷。</p>
+      <dl class="facts">
+        <div><dt>题数</dt><dd>12 题</dd></div>
+        <div><dt>每题</dt><dd>10 分</dd></div>
+        <div><dt>满分</dt><dd>120 分</dd></div>
+      </dl>
+      <button class="primary" id="start" type="button">开始答题</button>
+    </section>
+
+    <section id="quiz" hidden>
+      <div class="status">
+        <div class="progress-block">
+          <label for="progress">已答 <span id="answered">0</span> / 12 题</label>
+          <progress id="progress" value="0" max="12"></progress>
+        </div>
+        <div class="timer"><span>用时</span><strong id="timer" role="timer">00:00</strong></div>
+      </div>
+      <div class="card question">
+        <div class="question-meta"><span id="question-type"></span><span id="question-number"></span></div>
+        <h1 id="question-text" tabindex="-1"></h1>
+        <div class="options" id="options" role="group" aria-labelledby="question-text"></div>
+        <div class="navigation">
+          <button id="previous" type="button">上一题</button>
+          <p id="finish-note" hidden>本题选完自动交卷</p>
+          <button class="primary" id="next" type="button">下一题</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card result" id="result" hidden>
+      <h1 id="result-title" tabindex="-1">答题完成</h1>
+      <p class="score-line"><strong id="score"></strong> / 120 分</p>
+      <dl class="facts">
+        <div><dt>答对</dt><dd><span id="correct-count"></span> / 12 题</dd></div>
+        <div><dt>用时</dt><dd id="result-time"></dd></div>
+      </dl>
+      <button id="restart" type="button">再答一次</button>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      { question: "人体的运动系统由骨、骨连结和骨骼肌组成。", answer: true },
+      { question: "关节是骨连结的主要形式，具有灵活性。", answer: true },
+      { question: "骨骼肌收缩时，肌肉变短变粗，产生拉力。", answer: true },
+      { question: "人的肱二头肌和肱三头肌是同时收缩的。", answer: false },
+      { question: "骨的主要成分是钙盐和蛋白质。", answer: true },
+      { question: "人体所有的骨连结都是可以活动的。", answer: false },
+      { question: "人体运动系统的组成不包括？", options: ["骨", "关节", "骨骼肌", "神经"], answer: 3 },
+      { question: "关节的基本结构包括关节面、关节囊和？", options: ["关节软骨", "关节腔", "韧带", "滑液"], answer: 1 },
+      { question: "骨骼肌在运动中的作用是？", options: ["杠杆", "支点", "动力", "调节"], answer: 2 },
+      { question: "屈肘时，肱二头肌和肱三头肌的状态分别是？", options: ["收缩、舒张", "舒张、收缩", "都收缩", "都舒张"], answer: 0 },
+      { question: "使骨长长的结构是？", options: ["骨膜", "骨髓", "骨质", "骨骺端的软骨层"], answer: 3 },
+      { question: "下列不属于人体骨骼的是？", options: ["头骨", "躯干骨", "四肢骨", "牙齿"], answer: 3 }
+    ];
+
+    const pointsPerQuestion = 10;
+    const byId = id => document.getElementById(id);
+    const [welcome, quiz, result, timer, options, previous, next] =
+      ["welcome", "quiz", "result", "timer", "options", "previous", "next"].map(byId);
+    let answers = [];
+    let current = 0;
+    let startedAt = 0;
+    let clock;
+
+    function updateTimer() {
+      const seconds = Math.max(0, Math.floor((Date.now() - startedAt) / 1000));
+      const minutes = String(Math.floor(seconds / 60)).padStart(2, "0");
+      const remainder = String(seconds % 60).padStart(2, "0");
+      timer.textContent = minutes + ":" + remainder;
+    }
+
+    function updateSelection() {
+      for (const button of options.children) {
+        button.setAttribute("aria-pressed", String(Number(button.dataset.choice) === answers[current]));
+      }
+      next.disabled = answers[current] === null;
+      const answered = answers.filter(choice => choice !== null).length;
+      byId("answered").textContent = answered;
+      byId("progress").value = answered;
+      return answered;
+    }
+
+    function showQuestion() {
+      const question = questions[current];
+      const choices = question.options || ["正确", "错误"];
+      const isChoice = Boolean(question.options);
+      byId("question-type").textContent = isChoice ? "单选题" : "判断题";
+      byId("question-number").textContent = (current + 1) + " / " + questions.length;
+      const title = byId("question-text");
+      title.textContent = question.question;
+      options.classList.toggle("choice", isChoice);
+      options.replaceChildren(...choices.map((choice, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "option";
+        button.dataset.choice = index;
+        if (isChoice) {
+          const letter = document.createElement("span");
+          letter.className = "letter";
+          letter.setAttribute("aria-hidden", "true");
+          letter.textContent = "ABCD"[index];
+          button.append(letter);
+        }
+        const label = document.createElement("span");
+        label.textContent = choice;
+        button.append(label);
+        return button;
+      }));
+      previous.disabled = current === 0;
+      next.hidden = current === questions.length - 1;
+      byId("finish-note").hidden = !next.hidden;
+      updateSelection();
+      title.focus({ preventScroll: true });
+      window.scrollTo(0, 0);
+    }
+
+    function finishQuiz() {
+      clearInterval(clock);
+      updateTimer();
+      const correct = questions.filter((question, index) => {
+        const expected = question.options ? question.answer : (question.answer ? 0 : 1);
+        return answers[index] === expected;
+      }).length;
+      byId("score").textContent = correct * pointsPerQuestion;
+      byId("correct-count").textContent = correct;
+      byId("result-time").textContent = timer.textContent;
+      quiz.hidden = true;
+      result.hidden = false;
+      byId("result-title").focus({ preventScroll: true });
+      window.scrollTo(0, 0);
+    }
+
+    byId("start").addEventListener("click", () => {
+      if (welcome.hidden) return;
+      answers = Array(questions.length).fill(null);
+      current = 0;
+      startedAt = Date.now();
+      updateTimer();
+      clock = setInterval(updateTimer, 250);
+      welcome.hidden = true;
+      quiz.hidden = false;
+      showQuestion();
+    });
+
+    options.addEventListener("click", event => {
+      const button = event.target.closest("button[data-choice]");
+      if (!button || quiz.hidden) return;
+      answers[current] = Number(button.dataset.choice);
+      if (updateSelection() === questions.length) finishQuiz();
+    });
+
+    previous.addEventListener("click", () => {
+      if (current === 0) return;
+      current -= 1;
+      showQuestion();
+    });
+
+    next.addEventListener("click", () => {
+      if (answers[current] === null || current === questions.length - 1) return;
+      current += 1;
+      showQuestion();
+    });
+
+    byId("restart").addEventListener("click", () => {
+      result.hidden = true;
+      welcome.hidden = false;
+      byId("welcome-title").focus({ preventScroll: true });
+      window.scrollTo(0, 0);
+    });
+  </script>
+</body>
+</html>
